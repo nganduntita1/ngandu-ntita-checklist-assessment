@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -45,5 +46,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the checklist templates created by this user.
+     */
+    public function templates(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ChecklistTemplate::class, 'created_by');
+    }
+
+    /**
+     * Get the checklist instances assigned to this user as auditor.
+     */
+    public function instances(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ChecklistInstance::class, 'auditor_id');
     }
 }
