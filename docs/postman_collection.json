@@ -1,0 +1,2918 @@
+{
+  "info": {
+    "name": "Compliance Checklist Management API",
+    "_postman_id": "compliance-checklist-api-v1",
+    "description": "API collection for the Compliance Checklist Management System.\n\nAll endpoints return responses in the envelope format:\n  {\"success\": true|false, \"message\": \"string\", \"data\": {}}\n\n**Setup:**\n1. Set the `baseUrl` variable to your server address (default: http://localhost:8080).\n2. Call POST /api/login and copy the `token` value from the response.\n3. Set the `token` collection variable to that value.\n4. All other requests will automatically include `Authorization: Bearer <token>`.\n\n**Test credentials:**\n- Admin:   admin@example.com / password\n- Auditor: auditor@example.com / password",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string",
+      "description": "Base URL of the API server. Change this if running on a different host or port."
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string",
+      "description": "Bearer token obtained from POST /api/login. Copy the token value from the login response and paste it here."
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "description": "Endpoints for obtaining and revoking Sanctum bearer tokens.",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            },
+            "description": "Authenticate with email and password to receive a Sanctum bearer token. Copy the `token` value from the response and set it as the `token` collection variable."
+          },
+          "response": [
+            {
+              "name": "200 OK \u2013 Login successful (admin)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "login"
+                  ]
+                },
+                "description": "Authenticate with email and password to receive a Sanctum bearer token. Copy the `token` value from the response and set it as the `token` collection variable."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"1|abc123xyz456def789ghi012jkl345mno678pqr901\",\n    \"user\": {\n      \"id\": 1,\n      \"name\": \"Admin\",\n      \"email\": \"admin@example.com\",\n      \"role\": \"admin\"\n    }\n  }\n}"
+            },
+            {
+              "name": "200 OK \u2013 Login successful (auditor)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"auditor@example.com\",\n  \"password\": \"password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "login"
+                  ]
+                },
+                "description": "Authenticate with email and password to receive a Sanctum bearer token. Copy the `token` value from the response and set it as the `token` collection variable."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"2|stu234vwx567yza890bcd123efg456hij789klm012\",\n    \"user\": {\n      \"id\": 2,\n      \"name\": \"Auditor\",\n      \"email\": \"auditor@example.com\",\n      \"role\": \"auditor\"\n    }\n  }\n}"
+            },
+            {
+              "name": "401 Unauthorized \u2013 Invalid credentials",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"wrongpassword\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "login"
+                  ]
+                },
+                "description": "Authenticate with email and password to receive a Sanctum bearer token. Copy the `token` value from the response and set it as the `token` collection variable."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Invalid credentials\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "422 Unprocessable \u2013 Validation error",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "login"
+                  ]
+                },
+                "description": "Authenticate with email and password to receive a Sanctum bearer token. Copy the `token` value from the response and set it as the `token` collection variable."
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation failed\",\n  \"data\": {\n    \"email\": [\n      \"The email field is required.\"\n    ],\n    \"password\": [\n      \"The password field is required.\"\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "logout"
+              ]
+            },
+            "description": "Revoke the current Sanctum bearer token. After calling this endpoint the token is invalidated and cannot be reused."
+          },
+          "response": [
+            {
+              "name": "200 OK \u2013 Logout successful",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/logout",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "logout"
+                  ]
+                },
+                "description": "Revoke the current Sanctum bearer token. After calling this endpoint the token is invalidated and cannot be reused."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Logged out successfully\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "401 Unauthorized \u2013 Missing or invalid token",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/logout",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "logout"
+                  ]
+                },
+                "description": "Revoke the current Sanctum bearer token. After calling this endpoint the token is invalidated and cannot be reused."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Unauthenticated\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Templates",
+      "description": "CRUD endpoints for checklist templates. Admin role required for create, update, and delete. Both Admins and Auditors can list and view templates.",
+      "item": [
+        {
+          "name": "List Templates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/templates?search=&page=1&per_page=15",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "templates"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": ""
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            },
+            "description": "Return a paginated list of templates. Admins see all templates; Auditors see only `active` templates. Supports optional `search` (title contains), `page`, and `per_page` query parameters."
+          },
+          "response": [
+            {
+              "name": "200 OK \u2013 Templates retrieved",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates?search=&page=1&per_page=15",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": ""
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "15"
+                    }
+                  ]
+                },
+                "description": "Return a paginated list of templates. Admins see all templates; Auditors see only `active` templates. Supports optional `search` (title contains), `page`, and `per_page` query parameters."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Templates retrieved\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": 1,\n        \"title\": \"ISO 27001 Audit\",\n        \"description\": \"Annual information security audit\",\n        \"status\": \"active\",\n        \"questions_count\": 2,\n        \"created_at\": \"2024-01-15T10:00:00Z\",\n        \"updated_at\": \"2024-01-15T10:00:00Z\"\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"last_page\": 3,\n      \"per_page\": 15,\n      \"total\": 42\n    }\n  }\n}"
+            },
+            {
+              "name": "401 Unauthorized \u2013 Missing token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates?search=&page=1&per_page=15",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": ""
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "15"
+                    }
+                  ]
+                },
+                "description": "Return a paginated list of templates. Admins see all templates; Auditors see only `active` templates. Supports optional `search` (title contains), `page`, and `per_page` query parameters."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Unauthenticated\",\n  \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Template",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"ISO 27001 Audit\",\n  \"description\": \"Annual information security audit\",\n  \"status\": \"active\",\n  \"questions\": [\n    {\n      \"question_text\": \"Are access controls documented?\",\n      \"answer_type\": \"boolean\",\n      \"required\": true,\n      \"sort_order\": 1\n    },\n    {\n      \"question_text\": \"Describe the encryption policy.\",\n      \"answer_type\": \"textarea\",\n      \"required\": true,\n      \"sort_order\": 2\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/templates",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "templates"
+              ]
+            },
+            "description": "Create a new checklist template with one or more questions. Admin role required. The template and all questions are persisted in a single database transaction."
+          },
+          "response": [
+            {
+              "name": "201 Created \u2013 Template created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"ISO 27001 Audit\",\n  \"description\": \"Annual information security audit\",\n  \"status\": \"active\",\n  \"questions\": [\n    {\n      \"question_text\": \"Are access controls documented?\",\n      \"answer_type\": \"boolean\",\n      \"required\": true,\n      \"sort_order\": 1\n    },\n    {\n      \"question_text\": \"Describe the encryption policy.\",\n      \"answer_type\": \"textarea\",\n      \"required\": true,\n      \"sort_order\": 2\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates"
+                  ]
+                },
+                "description": "Create a new checklist template with one or more questions. Admin role required. The template and all questions are persisted in a single database transaction."
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Template created\",\n  \"data\": {\n    \"id\": 1,\n    \"title\": \"ISO 27001 Audit\",\n    \"description\": \"Annual information security audit\",\n    \"status\": \"active\",\n    \"questions_count\": 2,\n    \"created_at\": \"2024-01-15T10:00:00Z\",\n    \"updated_at\": \"2024-01-15T10:00:00Z\",\n    \"questions\": [\n      {\n        \"id\": 10,\n        \"question_text\": \"Are access controls documented?\",\n        \"answer_type\": \"boolean\",\n        \"required\": true,\n        \"sort_order\": 1\n      },\n      {\n        \"id\": 11,\n        \"question_text\": \"Describe the encryption policy.\",\n        \"answer_type\": \"textarea\",\n        \"required\": true,\n        \"sort_order\": 2\n      }\n    ]\n  }\n}"
+            },
+            {
+              "name": "403 Forbidden \u2013 Auditor cannot create templates",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"ISO 27001 Audit\",\n  \"description\": \"Annual information security audit\",\n  \"status\": \"active\",\n  \"questions\": [\n    {\n      \"question_text\": \"Are access controls documented?\",\n      \"answer_type\": \"boolean\",\n      \"required\": true,\n      \"sort_order\": 1\n    },\n    {\n      \"question_text\": \"Describe the encryption policy.\",\n      \"answer_type\": \"textarea\",\n      \"required\": true,\n      \"sort_order\": 2\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates"
+                  ]
+                },
+                "description": "Create a new checklist template with one or more questions. Admin role required. The template and all questions are persisted in a single database transaction."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Forbidden\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "422 Unprocessable \u2013 Validation error",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"\",\n  \"questions\": [\n    {\n      \"question_text\": \"Q1\",\n      \"answer_type\": \"invalid\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates"
+                  ]
+                },
+                "description": "Create a new checklist template with one or more questions. Admin role required. The template and all questions are persisted in a single database transaction."
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation failed\",\n  \"data\": {\n    \"title\": [\n      \"The title field is required.\"\n    ],\n    \"questions.0.answer_type\": [\n      \"The selected answer type is invalid.\"\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Template",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/templates/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "templates",
+                "1"
+              ]
+            },
+            "description": "Retrieve a single template by ID, including all its questions ordered by `sort_order`."
+          },
+          "response": [
+            {
+              "name": "200 OK \u2013 Template retrieved",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates",
+                    "1"
+                  ]
+                },
+                "description": "Retrieve a single template by ID, including all its questions ordered by `sort_order`."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Template retrieved\",\n  \"data\": {\n    \"id\": 1,\n    \"title\": \"ISO 27001 Audit\",\n    \"description\": \"Annual information security audit\",\n    \"status\": \"active\",\n    \"questions_count\": 2,\n    \"created_at\": \"2024-01-15T10:00:00Z\",\n    \"updated_at\": \"2024-01-15T10:00:00Z\",\n    \"questions\": [\n      {\n        \"id\": 10,\n        \"question_text\": \"Are access controls documented?\",\n        \"answer_type\": \"boolean\",\n        \"required\": true,\n        \"sort_order\": 1\n      },\n      {\n        \"id\": 11,\n        \"question_text\": \"Describe the encryption policy.\",\n        \"answer_type\": \"textarea\",\n        \"required\": true,\n        \"sort_order\": 2\n      }\n    ]\n  }\n}"
+            },
+            {
+              "name": "404 Not Found \u2013 Template does not exist",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates/9999",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates",
+                    "9999"
+                  ]
+                },
+                "description": "Retrieve a single template by ID, including all its questions ordered by `sort_order`."
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Not found\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "401 Unauthorized \u2013 Missing token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates",
+                    "1"
+                  ]
+                },
+                "description": "Retrieve a single template by ID, including all its questions ordered by `sort_order`."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Unauthenticated\",\n  \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Template",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"ISO 27001 Audit (Revised)\",\n  \"description\": \"Updated annual information security audit\",\n  \"status\": \"active\",\n  \"questions\": [\n    {\n      \"question_text\": \"Are access controls documented and reviewed?\",\n      \"answer_type\": \"boolean\",\n      \"required\": true,\n      \"sort_order\": 1\n    },\n    {\n      \"question_text\": \"Describe the encryption policy.\",\n      \"answer_type\": \"textarea\",\n      \"required\": true,\n      \"sort_order\": 2\n    },\n    {\n      \"question_text\": \"How many incidents occurred this year?\",\n      \"answer_type\": \"number\",\n      \"required\": false,\n      \"sort_order\": 3\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/templates/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "templates",
+                "1"
+              ]
+            },
+            "description": "Update an existing template and replace its question set. Admin role required. The update is wrapped in a database transaction."
+          },
+          "response": [
+            {
+              "name": "200 OK \u2013 Template updated",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"ISO 27001 Audit (Revised)\",\n  \"description\": \"Updated annual information security audit\",\n  \"status\": \"active\",\n  \"questions\": [\n    {\n      \"question_text\": \"Are access controls documented and reviewed?\",\n      \"answer_type\": \"boolean\",\n      \"required\": true,\n      \"sort_order\": 1\n    },\n    {\n      \"question_text\": \"Describe the encryption policy.\",\n      \"answer_type\": \"textarea\",\n      \"required\": true,\n      \"sort_order\": 2\n    },\n    {\n      \"question_text\": \"How many incidents occurred this year?\",\n      \"answer_type\": \"number\",\n      \"required\": false,\n      \"sort_order\": 3\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates",
+                    "1"
+                  ]
+                },
+                "description": "Update an existing template and replace its question set. Admin role required. The update is wrapped in a database transaction."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Template updated\",\n  \"data\": {\n    \"id\": 1,\n    \"title\": \"ISO 27001 Audit (Revised)\",\n    \"description\": \"Updated annual information security audit\",\n    \"status\": \"active\",\n    \"questions_count\": 2,\n    \"created_at\": \"2024-01-15T10:00:00Z\",\n    \"updated_at\": \"2024-01-15T10:00:00Z\",\n    \"questions\": [\n      {\n        \"question_text\": \"Are access controls documented and reviewed?\",\n        \"answer_type\": \"boolean\",\n        \"required\": true,\n        \"sort_order\": 1\n      },\n      {\n        \"question_text\": \"Describe the encryption policy.\",\n        \"answer_type\": \"textarea\",\n        \"required\": true,\n        \"sort_order\": 2\n      },\n      {\n        \"question_text\": \"How many incidents occurred this year?\",\n        \"answer_type\": \"number\",\n        \"required\": false,\n        \"sort_order\": 3\n      }\n    ]\n  }\n}"
+            },
+            {
+              "name": "403 Forbidden \u2013 Auditor cannot update templates",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"ISO 27001 Audit (Revised)\",\n  \"description\": \"Updated annual information security audit\",\n  \"status\": \"active\",\n  \"questions\": [\n    {\n      \"question_text\": \"Are access controls documented and reviewed?\",\n      \"answer_type\": \"boolean\",\n      \"required\": true,\n      \"sort_order\": 1\n    },\n    {\n      \"question_text\": \"Describe the encryption policy.\",\n      \"answer_type\": \"textarea\",\n      \"required\": true,\n      \"sort_order\": 2\n    },\n    {\n      \"question_text\": \"How many incidents occurred this year?\",\n      \"answer_type\": \"number\",\n      \"required\": false,\n      \"sort_order\": 3\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates",
+                    "1"
+                  ]
+                },
+                "description": "Update an existing template and replace its question set. Admin role required. The update is wrapped in a database transaction."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Forbidden\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "404 Not Found \u2013 Template does not exist",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"ISO 27001 Audit (Revised)\",\n  \"description\": \"Updated annual information security audit\",\n  \"status\": \"active\",\n  \"questions\": [\n    {\n      \"question_text\": \"Are access controls documented and reviewed?\",\n      \"answer_type\": \"boolean\",\n      \"required\": true,\n      \"sort_order\": 1\n    },\n    {\n      \"question_text\": \"Describe the encryption policy.\",\n      \"answer_type\": \"textarea\",\n      \"required\": true,\n      \"sort_order\": 2\n    },\n    {\n      \"question_text\": \"How many incidents occurred this year?\",\n      \"answer_type\": \"number\",\n      \"required\": false,\n      \"sort_order\": 3\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates/9999",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates",
+                    "9999"
+                  ]
+                },
+                "description": "Update an existing template and replace its question set. Admin role required. The update is wrapped in a database transaction."
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Not found\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "422 Unprocessable \u2013 Validation error",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates",
+                    "1"
+                  ]
+                },
+                "description": "Update an existing template and replace its question set. Admin role required. The update is wrapped in a database transaction."
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation failed\",\n  \"data\": {\n    \"title\": [\n      \"The title may not be greater than 255 characters.\"\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Template",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/templates/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "templates",
+                "1"
+              ]
+            },
+            "description": "Delete a template and cascade-delete all associated questions. Admin role required."
+          },
+          "response": [
+            {
+              "name": "200 OK \u2013 Template deleted",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates",
+                    "1"
+                  ]
+                },
+                "description": "Delete a template and cascade-delete all associated questions. Admin role required."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Template deleted\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "403 Forbidden \u2013 Auditor cannot delete templates",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates",
+                    "1"
+                  ]
+                },
+                "description": "Delete a template and cascade-delete all associated questions. Admin role required."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Forbidden\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "404 Not Found \u2013 Template does not exist",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/templates/9999",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "templates",
+                    "9999"
+                  ]
+                },
+                "description": "Delete a template and cascade-delete all associated questions. Admin role required."
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Not found\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Checklists",
+      "description": "Endpoints for auditors to manage their checklist instances. Auditor role required for all endpoints in this folder.",
+      "item": [
+        {
+          "name": "List Checklists",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/checklists?page=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "checklists"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "List all checklist instances belonging to the authenticated auditor. Paginated with 15 records per page."
+          },
+          "response": [
+            {
+              "name": "200 OK \u2013 Checklists retrieved",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists?page=1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "List all checklist instances belonging to the authenticated auditor. Paginated with 15 records per page."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Checklists retrieved\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": 42,\n        \"template\": {\n          \"id\": 1,\n          \"title\": \"ISO 27001 Audit\"\n        },\n        \"status\": \"draft\",\n        \"completed_at\": null,\n        \"created_at\": \"2024-01-15T09:00:00Z\",\n        \"updated_at\": \"2024-01-15T09:00:00Z\"\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"last_page\": 1,\n      \"per_page\": 15,\n      \"total\": 1\n    }\n  }\n}"
+            },
+            {
+              "name": "403 Forbidden \u2013 Admin cannot list checklists",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists?page=1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "List all checklist instances belonging to the authenticated auditor. Paginated with 15 records per page."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Forbidden\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "401 Unauthorized \u2013 Missing token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists?page=1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "List all checklist instances belonging to the authenticated auditor. Paginated with 15 records per page."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Unauthenticated\",\n  \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Start Checklist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/checklists/start",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "checklists",
+                "start"
+              ]
+            },
+            "description": "Start a new checklist instance from an active template. Creates a new instance with status `draft` and returns it with all questions. Auditor role required."
+          },
+          "response": [
+            {
+              "name": "201 Created \u2013 Checklist started",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"template_id\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/start",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "start"
+                  ]
+                },
+                "description": "Start a new checklist instance from an active template. Creates a new instance with status `draft` and returns it with all questions. Auditor role required."
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Checklist started\",\n  \"data\": {\n    \"id\": 42,\n    \"template\": {\n      \"id\": 1,\n      \"title\": \"ISO 27001 Audit\"\n    },\n    \"status\": \"draft\",\n    \"completed_at\": null,\n    \"created_at\": \"2024-01-15T09:00:00Z\",\n    \"updated_at\": \"2024-01-15T09:00:00Z\",\n    \"questions\": [\n      {\n        \"id\": 10,\n        \"question_text\": \"Are access controls documented?\",\n        \"answer_type\": \"boolean\",\n        \"required\": true,\n        \"sort_order\": 1\n      },\n      {\n        \"id\": 11,\n        \"question_text\": \"Describe the encryption policy.\",\n        \"answer_type\": \"textarea\",\n        \"required\": true,\n        \"sort_order\": 2\n      }\n    ],\n    \"answers\": []\n  }\n}"
+            },
+            {
+              "name": "403 Forbidden \u2013 Admin cannot start checklists",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"template_id\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/start",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "start"
+                  ]
+                },
+                "description": "Start a new checklist instance from an active template. Creates a new instance with status `draft` and returns it with all questions. Auditor role required."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Forbidden\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "404 Not Found \u2013 Template does not exist or is inactive",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"template_id\": 9999\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/start",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "start"
+                  ]
+                },
+                "description": "Start a new checklist instance from an active template. Creates a new instance with status `draft` and returns it with all questions. Auditor role required."
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Not found\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "422 Unprocessable \u2013 Missing template_id",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/start",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "start"
+                  ]
+                },
+                "description": "Start a new checklist instance from an active template. Creates a new instance with status `draft` and returns it with all questions. Auditor role required."
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation failed\",\n  \"data\": {\n    \"template_id\": [\n      \"The template id field is required.\"\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Save Draft",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answers\": [\n    {\n      \"question_id\": 10,\n      \"answer_value\": \"true\"\n    },\n    {\n      \"question_id\": 11,\n      \"answer_value\": \"Documented in policy v3.2\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/checklists/42/save-draft",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "checklists",
+                "42",
+                "save-draft"
+              ]
+            },
+            "description": "Save draft answers for a checklist instance. Can be called multiple times; answers are upserted. Only the owning auditor can save drafts, and only while the instance is in `draft` status."
+          },
+          "response": [
+            {
+              "name": "200 OK \u2013 Draft saved",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"answers\": [\n    {\n      \"question_id\": 10,\n      \"answer_value\": \"true\"\n    },\n    {\n      \"question_id\": 11,\n      \"answer_value\": \"Documented in policy v3.2\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/save-draft",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "save-draft"
+                  ]
+                },
+                "description": "Save draft answers for a checklist instance. Can be called multiple times; answers are upserted. Only the owning auditor can save drafts, and only while the instance is in `draft` status."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Draft saved\",\n  \"data\": {\n    \"id\": 42,\n    \"template\": {\n      \"id\": 1,\n      \"title\": \"ISO 27001 Audit\"\n    },\n    \"status\": \"draft\",\n    \"completed_at\": null,\n    \"created_at\": \"2024-01-15T09:00:00Z\",\n    \"updated_at\": \"2024-01-15T09:00:00Z\",\n    \"questions\": [\n      {\n        \"id\": 10,\n        \"question_text\": \"Are access controls documented?\",\n        \"answer_type\": \"boolean\",\n        \"required\": true,\n        \"sort_order\": 1\n      },\n      {\n        \"id\": 11,\n        \"question_text\": \"Describe the encryption policy.\",\n        \"answer_type\": \"textarea\",\n        \"required\": true,\n        \"sort_order\": 2\n      }\n    ],\n    \"answers\": [\n      {\n        \"id\": 1,\n        \"question_id\": 10,\n        \"answer_value\": \"true\"\n      },\n      {\n        \"id\": 2,\n        \"question_id\": 11,\n        \"answer_value\": \"Documented in policy v3.2\"\n      }\n    ]\n  }\n}"
+            },
+            {
+              "name": "403 Forbidden \u2013 Instance belongs to another auditor",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"answers\": [\n    {\n      \"question_id\": 10,\n      \"answer_value\": \"true\"\n    },\n    {\n      \"question_id\": 11,\n      \"answer_value\": \"Documented in policy v3.2\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/save-draft",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "save-draft"
+                  ]
+                },
+                "description": "Save draft answers for a checklist instance. Can be called multiple times; answers are upserted. Only the owning auditor can save drafts, and only while the instance is in `draft` status."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Forbidden\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "403 Forbidden \u2013 Instance is already completed",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"answers\": [\n    {\n      \"question_id\": 10,\n      \"answer_value\": \"true\"\n    },\n    {\n      \"question_id\": 11,\n      \"answer_value\": \"Documented in policy v3.2\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/save-draft",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "save-draft"
+                  ]
+                },
+                "description": "Save draft answers for a checklist instance. Can be called multiple times; answers are upserted. Only the owning auditor can save drafts, and only while the instance is in `draft` status."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Forbidden\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "404 Not Found \u2013 Checklist instance not found",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"answers\": [\n    {\n      \"question_id\": 10,\n      \"answer_value\": \"true\"\n    },\n    {\n      \"question_id\": 11,\n      \"answer_value\": \"Documented in policy v3.2\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/9999/save-draft",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "9999",
+                    "save-draft"
+                  ]
+                },
+                "description": "Save draft answers for a checklist instance. Can be called multiple times; answers are upserted. Only the owning auditor can save drafts, and only while the instance is in `draft` status."
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Not found\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "422 Unprocessable \u2013 Invalid answers payload",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"answers\": \"not-an-array\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/save-draft",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "save-draft"
+                  ]
+                },
+                "description": "Save draft answers for a checklist instance. Can be called multiple times; answers are upserted. Only the owning auditor can save drafts, and only while the instance is in `draft` status."
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation failed\",\n  \"data\": {\n    \"answers\": [\n      \"The answers field must be an array.\"\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Submit Checklist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/checklists/42/submit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "checklists",
+                "42",
+                "submit"
+              ]
+            },
+            "description": "Submit a checklist instance. Validates that all required questions have non-empty answers. On success, sets status to `completed` and records `completed_at`. Auditor role required."
+          },
+          "response": [
+            {
+              "name": "200 OK \u2013 Checklist submitted",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/submit",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "submit"
+                  ]
+                },
+                "description": "Submit a checklist instance. Validates that all required questions have non-empty answers. On success, sets status to `completed` and records `completed_at`. Auditor role required."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Checklist submitted\",\n  \"data\": {\n    \"id\": 42,\n    \"status\": \"completed\",\n    \"completed_at\": \"2024-01-20T14:30:00Z\"\n  }\n}"
+            },
+            {
+              "name": "422 Unprocessable \u2013 Required questions unanswered",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/submit",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "submit"
+                  ]
+                },
+                "description": "Submit a checklist instance. Validates that all required questions have non-empty answers. On success, sets status to `completed` and records `completed_at`. Auditor role required."
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Required questions are unanswered\",\n  \"data\": {\n    \"unanswered_questions\": [\n      {\n        \"id\": 11,\n        \"question_text\": \"Describe the encryption policy.\"\n      }\n    ]\n  }\n}"
+            },
+            {
+              "name": "403 Forbidden \u2013 Instance belongs to another auditor",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/submit",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "submit"
+                  ]
+                },
+                "description": "Submit a checklist instance. Validates that all required questions have non-empty answers. On success, sets status to `completed` and records `completed_at`. Auditor role required."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Forbidden\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "404 Not Found \u2013 Checklist instance not found",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/9999/submit",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "9999",
+                    "submit"
+                  ]
+                },
+                "description": "Submit a checklist instance. Validates that all required questions have non-empty answers. On success, sets status to `completed` and records `completed_at`. Auditor role required."
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Not found\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "description": "Reporting endpoint for admins to view all checklist instances with filtering. Admin role required.",
+      "item": [
+        {
+          "name": "Get Reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports?date_from=2024-01-01&date_to=2024-12-31&template_id=1&auditor_id=2&page=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports"
+              ],
+              "query": [
+                {
+                  "key": "date_from",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "date_to",
+                  "value": "2024-12-31"
+                },
+                {
+                  "key": "template_id",
+                  "value": "1"
+                },
+                {
+                  "key": "auditor_id",
+                  "value": "2"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Return a filtered, paginated report of all checklist instances. Admin role required. Supports optional filters: `date_from`, `date_to`, `template_id`, `auditor_id`."
+          },
+          "response": [
+            {
+              "name": "200 OK \u2013 Report retrieved",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/reports?date_from=2024-01-01&date_to=2024-12-31&template_id=1&auditor_id=2&page=1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "reports"
+                  ],
+                  "query": [
+                    {
+                      "key": "date_from",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "date_to",
+                      "value": "2024-12-31"
+                    },
+                    {
+                      "key": "template_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "auditor_id",
+                      "value": "2"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Return a filtered, paginated report of all checklist instances. Admin role required. Supports optional filters: `date_from`, `date_to`, `template_id`, `auditor_id`."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Report retrieved\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": 42,\n        \"auditor\": {\n          \"id\": 2,\n          \"name\": \"Jane Auditor\"\n        },\n        \"template\": {\n          \"id\": 1,\n          \"title\": \"ISO 27001 Audit\"\n        },\n        \"status\": \"completed\",\n        \"completed_at\": \"2024-01-20T14:30:00Z\",\n        \"created_at\": \"2024-01-15T09:00:00Z\"\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"last_page\": 2,\n      \"per_page\": 15,\n      \"total\": 28\n    }\n  }\n}"
+            },
+            {
+              "name": "403 Forbidden \u2013 Auditor cannot access reports",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/reports?date_from=2024-01-01&date_to=2024-12-31&template_id=1&auditor_id=2&page=1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "reports"
+                  ],
+                  "query": [
+                    {
+                      "key": "date_from",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "date_to",
+                      "value": "2024-12-31"
+                    },
+                    {
+                      "key": "template_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "auditor_id",
+                      "value": "2"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Return a filtered, paginated report of all checklist instances. Admin role required. Supports optional filters: `date_from`, `date_to`, `template_id`, `auditor_id`."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Forbidden\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "401 Unauthorized \u2013 Missing token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/reports?date_from=2024-01-01&date_to=2024-12-31&template_id=1&auditor_id=2&page=1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "reports"
+                  ],
+                  "query": [
+                    {
+                      "key": "date_from",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "date_to",
+                      "value": "2024-12-31"
+                    },
+                    {
+                      "key": "template_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "auditor_id",
+                      "value": "2"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Return a filtered, paginated report of all checklist instances. Admin role required. Supports optional filters: `date_from`, `date_to`, `template_id`, `auditor_id`."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Unauthenticated\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PDF Export",
+      "description": "Endpoints for exporting completed checklist instances as PDF files. PDF generation is asynchronous \u2014 dispatch the job first, then download once ready.",
+      "item": [
+        {
+          "name": "Export PDF (Dispatch Job)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/checklists/42/export-pdf",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "checklists",
+                "42",
+                "export-pdf"
+              ]
+            },
+            "description": "Dispatch an asynchronous queue job to generate a PDF for the specified completed checklist instance. Returns 202 Accepted immediately; the PDF is generated in the background. Both Admin and Auditor roles are permitted."
+          },
+          "response": [
+            {
+              "name": "202 Accepted \u2013 PDF generation queued",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/export-pdf",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "export-pdf"
+                  ]
+                },
+                "description": "Dispatch an asynchronous queue job to generate a PDF for the specified completed checklist instance. Returns 202 Accepted immediately; the PDF is generated in the background. Both Admin and Auditor roles are permitted."
+              },
+              "status": "Accepted",
+              "code": 202,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"PDF generation queued\",\n  \"data\": {\n    \"job_id\": \"550e8400-e29b-41d4-a716-446655440000\"\n  }\n}"
+            },
+            {
+              "name": "403 Forbidden \u2013 Instance belongs to another auditor",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/export-pdf",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "export-pdf"
+                  ]
+                },
+                "description": "Dispatch an asynchronous queue job to generate a PDF for the specified completed checklist instance. Returns 202 Accepted immediately; the PDF is generated in the background. Both Admin and Auditor roles are permitted."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Forbidden\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "404 Not Found \u2013 Checklist instance not found",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/9999/export-pdf",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "9999",
+                    "export-pdf"
+                  ]
+                },
+                "description": "Dispatch an asynchronous queue job to generate a PDF for the specified completed checklist instance. Returns 202 Accepted immediately; the PDF is generated in the background. Both Admin and Auditor roles are permitted."
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Not found\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "422 Unprocessable \u2013 Instance is not completed",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/export-pdf",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "export-pdf"
+                  ]
+                },
+                "description": "Dispatch an asynchronous queue job to generate a PDF for the specified completed checklist instance. Returns 202 Accepted immediately; the PDF is generated in the background. Both Admin and Auditor roles are permitted."
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"PDF can only be exported for completed checklists\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "401 Unauthorized \u2013 Missing token",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/export-pdf",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "export-pdf"
+                  ]
+                },
+                "description": "Dispatch an asynchronous queue job to generate a PDF for the specified completed checklist instance. Returns 202 Accepted immediately; the PDF is generated in the background. Both Admin and Auditor roles are permitted."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Unauthenticated\",\n  \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Download PDF",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/checklists/42/download-pdf",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "checklists",
+                "42",
+                "download-pdf"
+              ]
+            },
+            "description": "Download the generated PDF for a completed checklist instance. Returns the PDF file as a binary stream with `Content-Type: application/pdf`. The PDF must have been generated first via POST /api/checklists/{id}/export-pdf."
+          },
+          "response": [
+            {
+              "name": "200 OK \u2013 PDF file stream",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/download-pdf",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "download-pdf"
+                  ]
+                },
+                "description": "Download the generated PDF for a completed checklist instance. Returns the PDF file as a binary stream with `Content-Type: application/pdf`. The PDF must have been generated first via POST /api/checklists/{id}/export-pdf."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"_note\": \"Response body is a binary PDF file stream, not JSON. Content-Type: application/pdf\"\n}"
+            },
+            {
+              "name": "404 Not Found \u2013 PDF not yet generated",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/download-pdf",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "download-pdf"
+                  ]
+                },
+                "description": "Download the generated PDF for a completed checklist instance. Returns the PDF file as a binary stream with `Content-Type: application/pdf`. The PDF must have been generated first via POST /api/checklists/{id}/export-pdf."
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"PDF not found. Please export the PDF first.\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "403 Forbidden \u2013 Instance belongs to another auditor",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/download-pdf",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "download-pdf"
+                  ]
+                },
+                "description": "Download the generated PDF for a completed checklist instance. Returns the PDF file as a binary stream with `Content-Type: application/pdf`. The PDF must have been generated first via POST /api/checklists/{id}/export-pdf."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Forbidden\",\n  \"data\": null\n}"
+            },
+            {
+              "name": "401 Unauthorized \u2013 Missing token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/checklists/42/download-pdf",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "checklists",
+                    "42",
+                    "download-pdf"
+                  ]
+                },
+                "description": "Download the generated PDF for a completed checklist instance. Returns the PDF file as a binary stream with `Content-Type: application/pdf`. The PDF must have been generated first via POST /api/checklists/{id}/export-pdf."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Unauthenticated\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

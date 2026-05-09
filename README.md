@@ -64,3 +64,73 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## API Documentation
+
+The full API is documented as a **Postman Collection v2.1** file located at:
+
+```
+docs/postman_collection.json
+```
+
+### Importing the Collection
+
+1. Open Postman.
+2. Click **File → Import** (or press `Ctrl+O` / `Cmd+O`).
+3. Select `docs/postman_collection.json` from the project directory.
+4. The collection **"Compliance Checklist Management API"** will appear in your sidebar.
+
+### Setting Up Variables
+
+The collection uses two variables that you configure once:
+
+| Variable  | Default                  | Description                                      |
+|-----------|--------------------------|--------------------------------------------------|
+| `baseUrl` | `http://localhost:8080`  | Base URL of the running server                   |
+| `token`   | *(empty)*                | Bearer token obtained after logging in           |
+
+**To set the `token` after logging in:**
+
+1. Send the **Login** request (`POST /api/login`) with your credentials.
+2. Copy the `token` value from the response `data` object.
+3. In Postman, click the collection name → **Variables** tab.
+4. Paste the token into the **Current Value** column for the `token` variable.
+5. All subsequent requests will automatically include `Authorization: Bearer <token>`.
+
+**To change the `baseUrl`** (e.g. if the server runs on port 8000):
+
+1. Click the collection name → **Variables** tab.
+2. Update the **Current Value** of `baseUrl` to `http://localhost:8000`.
+
+### Test Credentials
+
+| Role    | Email                    | Password   |
+|---------|--------------------------|------------|
+| Admin   | `admin@example.com`      | `password` |
+| Auditor | `auditor@example.com`    | `password` |
+
+### Collection Folder Structure
+
+| Folder            | Endpoints | Description                                                  |
+|-------------------|-----------|--------------------------------------------------------------|
+| **Authentication**| 2         | `POST /api/login`, `POST /api/logout`                        |
+| **Templates**     | 5         | CRUD for checklist templates (Admin role required for writes)|
+| **Checklists**    | 4         | Start, save-draft, and submit instances (Auditor role)       |
+| **Reports**       | 1         | Filtered, paginated instance report (Admin role)             |
+| **PDF Export**    | 2         | Dispatch PDF generation job and download the result          |
+
+Each endpoint includes example request bodies, required headers, and saved example responses for both success and error cases.
+
+### Response Envelope
+
+All API responses follow this consistent format:
+
+```json
+{
+  "success": true,
+  "message": "Human-readable status message",
+  "data": {}
+}
+```
+
+Error responses use `"success": false` and include field-level details in `data` for 422 validation errors.
