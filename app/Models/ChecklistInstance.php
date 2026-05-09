@@ -19,6 +19,7 @@ class ChecklistInstance extends Model
         'auditor_id',
         'status',
         'completed_at',
+        'pdf_path',
     ];
 
     /**
