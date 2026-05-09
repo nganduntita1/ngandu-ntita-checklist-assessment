@@ -56,5 +56,7 @@ Route::middleware('auth')->group(function () {
         // Checklists
         Route::get('/checklists', [ChecklistWebController::class, 'index'])->name('checklists.index');
         Route::get('/checklists/{checklist}', [ChecklistWebController::class, 'show'])->name('checklists.show');
+        Route::post('/checklists/{checklist}/save-draft', [ChecklistWebController::class, 'saveDraft'])->name('checklists.save-draft');
+        Route::post('/checklists/{checklist}/submit', [ChecklistWebController::class, 'submit'])->name('checklists.submit');
     });
 });
