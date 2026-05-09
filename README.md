@@ -1,69 +1,442 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Compliance Checklist Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A full-stack web application for managing compliance workflows through structured checklists. Built with **Laravel 11**, **React** (via Inertia.js), and **Tailwind CSS**.
 
-## About Laravel
+Admins create and manage checklist templates with typed questions. Auditors complete those checklists, save drafts, and submit final responses. The system exposes a REST API secured with Laravel Sanctum and provides a reporting interface with filtering and PDF export capabilities.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Table of Contents
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Installation](#installation)
+- [Seeder Instructions](#seeder-instructions)
+- [Test Credentials](#test-credentials)
+- [Queue Setup](#queue-setup)
+- [Docker Setup](#docker-setup)
+- [Running Tests](#running-tests)
+- [Project Structure](#project-structure)
+- [API Documentation](#api-documentation)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Installation
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Prerequisites
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.2+
+- Composer 2
+- Node.js 18+ and npm
+- MySQL 8.0 (or SQLite for local development)
 
-## Laravel Sponsors
+### Steps
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. **Clone the repository**
 
-### Premium Partners
+   ```bash
+   git clone https://github.com/nganduntita1/ngandu-ntita-checklist-assessment.git
+   cd ngandu-ntita-checklist-assessment
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+2. **Install PHP dependencies**
 
-## Contributing
+   ```bash
+   composer install
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. **Install JavaScript dependencies**
 
-## Code of Conduct
+   ```bash
+   npm install
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4. **Copy the environment file**
 
-## Security Vulnerabilities
+   ```bash
+   cp .env.example .env
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5. **Generate the application key**
 
-## License
+   ```bash
+   php artisan key:generate
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+6. **Configure your database**
+
+   Open `.env` and update the database connection settings:
+
+   ```dotenv
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=compliance_db
+   DB_USERNAME=your_db_user
+   DB_PASSWORD=your_db_password
+   ```
+
+   For a quick local setup with SQLite, use:
+
+   ```dotenv
+   DB_CONNECTION=sqlite
+   DB_DATABASE=/absolute/path/to/database/database.sqlite
+   ```
+
+   Then create the SQLite file:
+
+   ```bash
+   touch database/database.sqlite
+   ```
+
+7. **Run database migrations**
+
+   ```bash
+   php artisan migrate
+   ```
+
+8. **Build frontend assets**
+
+   ```bash
+   npm run build
+   ```
+
+9. **Start the development server**
+
+   ```bash
+   php artisan serve
+   ```
+
+   The application will be available at `http://localhost:8000`.
+
+   For hot-reloading during development, run in a separate terminal:
+
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## Seeder Instructions
+
+Seed the database with default users and sample checklist templates:
+
+```bash
+php artisan db:seed
+```
+
+Expected output:
+
+```
+   INFO  Seeding database.
+
+  Database\Seeders\UserSeeder ............... RUNNING
+  Database\Seeders\UserSeeder ............... DONE
+
+  Database\Seeders\ChecklistTemplateSeeder .. RUNNING
+  Database\Seeders\ChecklistTemplateSeeder .. DONE
+```
+
+This creates:
+- 2 user accounts (admin and auditor — see [Test Credentials](#test-credentials))
+- 5 sample checklist templates with 3–6 questions each
+
+To reset and re-seed from scratch:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+---
+
+## Test Credentials
+
+| Role    | Email                 | Password   |
+|---------|-----------------------|------------|
+| Admin   | `admin@example.com`   | `password` |
+| Auditor | `auditor@example.com` | `password` |
+
+**Admin** can create, edit, and delete templates, and view reports.
+
+**Auditor** can view active templates, start checklist instances, save drafts, and submit completed checklists.
+
+---
+
+## Queue Setup
+
+PDF export is processed asynchronously via Laravel's queue system. The queue connection is configured in `.env`:
+
+```dotenv
+QUEUE_CONNECTION=database
+```
+
+### Starting the queue worker
+
+```bash
+php artisan queue:work --sleep=3 --tries=3
+```
+
+For production, use a process manager like Supervisor to keep the worker running. A minimal Supervisor config:
+
+```ini
+[program:compliance-queue]
+command=php /var/www/html/artisan queue:work --sleep=3 --tries=3
+autostart=true
+autorestart=true
+user=www-data
+redirect_stderr=true
+stdout_logfile=/var/log/compliance-queue.log
+```
+
+### Required environment variables for queue
+
+| Variable           | Value      | Description                          |
+|--------------------|------------|--------------------------------------|
+| `QUEUE_CONNECTION` | `database` | Uses the `jobs` table for the queue  |
+| `FILESYSTEM_DISK`  | `local`    | Where generated PDFs are stored      |
+
+Failed jobs are stored in the `failed_jobs` table and can be retried with:
+
+```bash
+php artisan queue:retry all
+```
+
+---
+
+## Docker Setup
+
+The project includes a full Docker environment with PHP-FPM, Nginx, MySQL, and a queue worker.
+
+### Starting the containers
+
+```bash
+docker-compose up -d
+```
+
+This starts four services:
+- `app` — PHP 8.2-FPM application server
+- `nginx` — Nginx reverse proxy (accessible at `http://localhost:8080`)
+- `db` — MySQL 8.0 database
+- `queue` — Laravel queue worker
+
+### Running migrations and seeders inside Docker
+
+Once the containers are running, exec into the `app` container:
+
+```bash
+docker-compose exec app bash
+```
+
+Then run migrations and seeders:
+
+```bash
+php artisan migrate
+php artisan db:seed
+```
+
+Or combine them in one step:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+### Building frontend assets inside Docker
+
+```bash
+docker-compose exec app bash -c "npm install && npm run build"
+```
+
+### Stopping the containers
+
+```bash
+docker-compose down
+```
+
+To also remove the database volume (destroys all data):
+
+```bash
+docker-compose down -v
+```
+
+### Docker environment variables
+
+The `docker-compose.yml` sets the following defaults:
+
+| Variable        | Value          |
+|-----------------|----------------|
+| `DB_HOST`       | `db`           |
+| `DB_DATABASE`   | `compliance_db`|
+| `DB_USERNAME`   | `compliance`   |
+| `DB_PASSWORD`   | `secret`       |
+| `MYSQL_ROOT_PASSWORD` | `secret` |
+
+---
+
+## Running Tests
+
+The test suite uses **Pest PHP** and runs against an in-memory SQLite database so no production data is affected.
+
+### Run all tests
+
+```bash
+php artisan test
+```
+
+### Run with verbose output
+
+```bash
+php artisan test --verbose
+```
+
+### Run a specific test file
+
+```bash
+php artisan test tests/Feature/AuthTest.php
+```
+
+### Run a specific test by name
+
+```bash
+php artisan test --filter "valid login returns token"
+```
+
+### Expected output
+
+```
+   PASS  Tests\Feature\AuthTest
+   PASS  Tests\Feature\TemplateCrudTest
+   PASS  Tests\Feature\ChecklistFlowTest
+   PASS  Tests\Feature\ReportTest
+   PASS  Tests\Feature\PdfExportTest
+   PASS  Tests\Unit\TemplateServiceTest
+   PASS  Tests\Unit\ChecklistServiceTest
+   PASS  Tests\Unit\ReportServiceTest
+   PASS  Tests\Unit\TemplatePolicyTest
+   PASS  Tests\Unit\InstancePolicyTest
+
+  Tests:    XX passed
+  Duration: X.XXs
+```
+
+### Test configuration
+
+Tests are configured in `phpunit.xml` to use:
+
+| Setting            | Value      |
+|--------------------|------------|
+| `DB_CONNECTION`    | `sqlite`   |
+| `DB_DATABASE`      | `:memory:` |
+| `QUEUE_CONNECTION` | `sync`     |
+| `MAIL_MAILER`      | `array`    |
+
+---
+
+## Project Structure
+
+```
+compliance-checklist/
+│
+├── app/
+│   ├── Actions/                    # Single-purpose action classes
+│   │   └── SubmitChecklistAction.php
+│   ├── Http/
+│   │   ├── Controllers/            # Thin controllers delegating to services
+│   │   │   ├── Web/                # Inertia/web controllers
+│   │   │   ├── AuthController.php
+│   │   │   ├── ChecklistController.php
+│   │   │   ├── PdfExportController.php
+│   │   │   ├── ReportController.php
+│   │   │   └── TemplateController.php
+│   │   ├── Middleware/
+│   │   │   ├── EnsureRole.php      # Role-based access middleware
+│   │   │   └── HandleInertiaRequests.php
+│   │   ├── Requests/               # Form request validation classes
+│   │   │   ├── LoginRequest.php
+│   │   │   ├── SaveDraftRequest.php
+│   │   │   ├── StoreTemplateRequest.php
+│   │   │   ├── UpdateTemplateRequest.php
+│   │   │   └── ReportFilterRequest.php
+│   │   └── Resources/              # API resource transformers
+│   │       ├── AnswerResource.php
+│   │       ├── InstanceResource.php
+│   │       ├── QuestionResource.php
+│   │       ├── ReportResource.php
+│   │       ├── TemplateResource.php
+│   │       └── UserResource.php
+│   ├── Jobs/
+│   │   └── GeneratePdfJob.php      # Async PDF generation queue job
+│   ├── Models/                     # Eloquent models
+│   │   ├── ChecklistAnswer.php
+│   │   ├── ChecklistInstance.php
+│   │   ├── ChecklistQuestion.php
+│   │   ├── ChecklistTemplate.php
+│   │   └── User.php
+│   ├── Policies/                   # Laravel authorization policies
+│   │   ├── InstancePolicy.php
+│   │   ├── ReportPolicy.php
+│   │   └── TemplatePolicy.php
+│   ├── Repositories/               # Data access layer
+│   │   ├── Contracts/              # Repository interfaces
+│   │   ├── InstanceRepository.php
+│   │   ├── ReportRepository.php
+│   │   └── TemplateRepository.php
+│   └── Services/                   # Business logic layer
+│       ├── AuthService.php
+│       ├── ChecklistService.php
+│       ├── ReportService.php
+│       └── TemplateService.php
+│
+├── database/
+│   ├── factories/                  # Model factories for testing and seeding
+│   ├── migrations/                 # Database schema migrations
+│   └── seeders/                    # Database seeders
+│       ├── DatabaseSeeder.php
+│       ├── UserSeeder.php
+│       └── ChecklistTemplateSeeder.php
+│
+├── resources/
+│   ├── js/
+│   │   ├── Components/
+│   │   │   ├── Questions/          # QuestionBuilder and AnswerInput components
+│   │   │   └── UI/                 # Shared UI components (Badge, Modal, etc.)
+│   │   ├── Layouts/                # AppLayout and GuestLayout
+│   │   └── Pages/
+│   │       ├── Auth/               # Login page
+│   │       ├── Checklists/         # Auditor checklist pages
+│   │       ├── Reports/            # Admin reports page
+│   │       └── Templates/          # Admin template CRUD pages
+│   └── views/
+│       └── pdf/                    # Blade template for PDF export
+│
+├── routes/
+│   ├── api.php                     # REST API routes (Sanctum-protected)
+│   └── web.php                     # Inertia web routes
+│
+├── tests/
+│   ├── Feature/                    # Full HTTP stack feature tests
+│   │   ├── AuthTest.php
+│   │   ├── ChecklistFlowTest.php
+│   │   ├── PdfExportTest.php
+│   │   ├── ReportTest.php
+│   │   └── TemplateCrudTest.php
+│   └── Unit/                       # Isolated unit tests
+│       ├── ChecklistServiceTest.php
+│       ├── InstancePolicyTest.php
+│       ├── ReportServiceTest.php
+│       ├── TemplatePolicyTest.php
+│       └── TemplateServiceTest.php
+│
+├── docker/
+│   ├── nginx/default.conf          # Nginx server configuration
+│   └── php/Dockerfile              # PHP 8.2-FPM Docker image
+│
+├── docs/
+│   └── postman_collection.json     # Postman API collection (v2.1)
+│
+├── docker-compose.yml              # Docker services definition
+├── .env.example                    # Environment variable template
+└── phpunit.xml                     # PHPUnit/Pest test configuration
+```
+
+---
 
 ## API Documentation
 
@@ -82,44 +455,33 @@ docs/postman_collection.json
 
 ### Setting Up Variables
 
-The collection uses two variables that you configure once:
+The collection uses two variables:
 
-| Variable  | Default                  | Description                                      |
-|-----------|--------------------------|--------------------------------------------------|
-| `baseUrl` | `http://localhost:8080`  | Base URL of the running server                   |
-| `token`   | *(empty)*                | Bearer token obtained after logging in           |
+| Variable  | Default                 | Description                            |
+|-----------|-------------------------|----------------------------------------|
+| `baseUrl` | `http://localhost:8080` | Base URL of the running server         |
+| `token`   | *(empty)*               | Bearer token obtained after logging in |
 
-**To set the `token` after logging in:**
+After logging in via `POST /api/login`, copy the `token` from the response and paste it into the collection's `token` variable. All subsequent requests will include `Authorization: Bearer <token>` automatically.
 
-1. Send the **Login** request (`POST /api/login`) with your credentials.
-2. Copy the `token` value from the response `data` object.
-3. In Postman, click the collection name → **Variables** tab.
-4. Paste the token into the **Current Value** column for the `token` variable.
-5. All subsequent requests will automatically include `Authorization: Bearer <token>`.
+### Endpoints Overview
 
-**To change the `baseUrl`** (e.g. if the server runs on port 8000):
-
-1. Click the collection name → **Variables** tab.
-2. Update the **Current Value** of `baseUrl` to `http://localhost:8000`.
-
-### Test Credentials
-
-| Role    | Email                    | Password   |
-|---------|--------------------------|------------|
-| Admin   | `admin@example.com`      | `password` |
-| Auditor | `auditor@example.com`    | `password` |
-
-### Collection Folder Structure
-
-| Folder            | Endpoints | Description                                                  |
-|-------------------|-----------|--------------------------------------------------------------|
-| **Authentication**| 2         | `POST /api/login`, `POST /api/logout`                        |
-| **Templates**     | 5         | CRUD for checklist templates (Admin role required for writes)|
-| **Checklists**    | 4         | Start, save-draft, and submit instances (Auditor role)       |
-| **Reports**       | 1         | Filtered, paginated instance report (Admin role)             |
-| **PDF Export**    | 2         | Dispatch PDF generation job and download the result          |
-
-Each endpoint includes example request bodies, required headers, and saved example responses for both success and error cases.
+| Method | Endpoint                          | Role          | Description                        |
+|--------|-----------------------------------|---------------|------------------------------------|
+| POST   | `/api/login`                      | Any           | Obtain Sanctum bearer token        |
+| POST   | `/api/logout`                     | Any           | Revoke current token               |
+| GET    | `/api/templates`                  | Admin/Auditor | List templates (role-filtered)     |
+| POST   | `/api/templates`                  | Admin         | Create template with questions     |
+| GET    | `/api/templates/{id}`             | Admin/Auditor | Get single template                |
+| PUT    | `/api/templates/{id}`             | Admin         | Update template and questions      |
+| DELETE | `/api/templates/{id}`             | Admin         | Delete template (cascades)         |
+| GET    | `/api/checklists`                 | Auditor       | List own checklist instances       |
+| POST   | `/api/checklists/start`           | Auditor       | Start a new checklist instance     |
+| POST   | `/api/checklists/{id}/save-draft` | Auditor       | Save draft answers                 |
+| POST   | `/api/checklists/{id}/submit`     | Auditor       | Submit completed checklist         |
+| GET    | `/api/reports`                    | Admin         | Filtered, paginated instance report|
+| POST   | `/api/checklists/{id}/export-pdf` | Admin/Auditor | Dispatch PDF generation job        |
+| GET    | `/api/checklists/{id}/download-pdf`| Admin/Auditor| Download generated PDF             |
 
 ### Response Envelope
 
