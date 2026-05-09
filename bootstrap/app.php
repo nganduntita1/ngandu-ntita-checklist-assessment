@@ -8,6 +8,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -35,6 +36,11 @@ return Application::configure(basePath: dirname(__DIR__))
                         'data'    => null,
                     ], 401),
                     $e instanceof AuthorizationException => response()->json([
+                        'success' => false,
+                        'message' => 'Forbidden',
+                        'data'    => null,
+                    ], 403),
+                    $e instanceof AccessDeniedHttpException => response()->json([
                         'success' => false,
                         'message' => 'Forbidden',
                         'data'    => null,
