@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -21,7 +22,15 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $result = $this->authService->login($request->validated());
+        try {
+            $result = $this->authService->login($request->validated());
+        } catch (ValidationException) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid credentials',
+                'data'    => null,
+            ], 401);
+        }
 
         return response()->json([
             'success' => true,
