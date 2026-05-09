@@ -16,11 +16,15 @@ class EnsureRole
     public function handle(Request $request, Closure $next, string $role): Response
     {
         if ($request->user()?->role !== $role) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Forbidden',
-                'data'    => null,
-            ], 403);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Forbidden',
+                    'data'    => null,
+                ], 403);
+            }
+
+            abort(403, 'Forbidden');
         }
 
         return $next($request);
