@@ -137,7 +137,7 @@ function AuditorDashboard({ draftCount, completedCount }) {
                     </p>
                 </div>
                 <Link
-                    href="/checklists"
+                    href="/checklists/start"
                     className="inline-flex items-center justify-center px-5 py-2.5 rounded-md bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors whitespace-nowrap"
                 >
                     Start New Checklist

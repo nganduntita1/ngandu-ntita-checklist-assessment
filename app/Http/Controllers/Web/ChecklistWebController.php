@@ -18,6 +18,43 @@ class ChecklistWebController extends Controller
     ) {}
 
     /**
+     * Show the list of active templates for the auditor to pick from.
+     *
+     * GET /checklists/start
+     */
+    public function startIndex(Request $request): Response
+    {
+        $templates = \App\Models\ChecklistTemplate::where('status', 'active')
+            ->withCount('questions')
+            ->orderBy('title')
+            ->get();
+
+        return Inertia::render('Checklists/Start', [
+            'templates' => $templates,
+        ]);
+    }
+
+    /**
+     * Create a new draft checklist instance from the chosen template.
+     *
+     * POST /checklists/start
+     */
+    public function start(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'template_id' => ['required', 'integer', 'exists:checklist_templates,id'],
+        ]);
+
+        $instance = $this->checklistService->start(
+            (int) $request->input('template_id'),
+            $request->user()
+        );
+
+        return redirect()->route('checklists.show', $instance)
+            ->with('success', 'Checklist started. Fill in your answers below.');
+    }
+
+    /**
      * Show the auditor's checklist instance list.
      *
      * GET /checklists

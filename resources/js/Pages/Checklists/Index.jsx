@@ -28,7 +28,7 @@ export default function Index({ checklists = [], meta = {} }) {
                         </p>
                     </div>
                     <Link
-                        href="/templates"
+                        href="/checklists/start"
                         className="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors whitespace-nowrap"
                     >
                         <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -45,7 +45,7 @@ export default function Index({ checklists = [], meta = {} }) {
                             title="No checklists yet"
                             description="Get started by selecting an active template and beginning a new compliance checklist."
                             ctaLabel="Start New Checklist"
-                            ctaHref="/templates"
+                            ctaHref="/checklists/start"
                         />
                     ) : (
                         <>
