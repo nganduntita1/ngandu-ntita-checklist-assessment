@@ -62,6 +62,46 @@ export default function Show({ checklist }) {
     const [savingDraft, setSavingDraft] = useState(false);
     const [submitting, setSubmitting] = useState(false);
 
+    // PDF export state: 'idle' | 'requesting' | 'done' | 'error'
+    const [pdfState, setPdfState] = useState('idle');
+    const [pdfError, setPdfError] = useState(null);
+
+    /**
+     * With QUEUE_CONNECTION=sync the PDF is generated synchronously before
+     * the POST returns, so we can download immediately after a successful response.
+     */
+    async function handleExportPdf() {
+        setPdfState('requesting');
+        setPdfError(null);
+
+        try {
+            const csrfToken = document.head
+                .querySelector('meta[name="csrf-token"]')
+                ?.getAttribute('content');
+
+            const res = await fetch(`/checklists/${checklist.id}/export-pdf`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken ?? '',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            });
+
+            if (!res.ok) {
+                const body = await res.json().catch(() => ({}));
+                throw new Error(body.message ?? `Export failed (${res.status})`);
+            }
+
+            // Job ran synchronously — PDF is ready, trigger download
+            setPdfState('done');
+            window.location.href = `/checklists/${checklist.id}/download-pdf`;
+        } catch (err) {
+            setPdfState('error');
+            setPdfError(err.message ?? 'Could not generate PDF. Please try again.');
+        }
+    }
+
     function handleAnswerChange(questionId, value) {
         setAnswers((prev) => ({ ...prev, [questionId]: value }));
         // Clear the error for this question when the user starts typing
@@ -268,39 +308,47 @@ export default function Show({ checklist }) {
 
                 {/* Action buttons — only shown for draft instances */}
                 {isDraft && (
-                    <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
-                        <Link
-                            href="/checklists"
-                            className="inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors"
-                        >
-                            Back to list
-                        </Link>
+                    <div className="space-y-3 pt-2">
+                        {/* Save vs Submit guidance */}
+                        <p className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-md px-3 py-2">
+                            <strong>Save Draft</strong> saves your answers so you can return and finish later.
+                            <strong className="ml-1">Submit</strong> locks the checklist and sends it to your admin — all required questions must be answered first.
+                        </p>
 
-                        <div className="flex items-center gap-3">
-                            <button
-                                type="button"
-                                onClick={handleSaveDraft}
-                                disabled={savingDraft || submitting}
-                                className="rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <Link
+                                href="/checklists"
+                                className="inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors"
                             >
-                                {savingDraft ? 'Saving…' : 'Save Draft'}
-                            </button>
+                                Back to list
+                            </Link>
 
-                            <button
-                                type="button"
-                                onClick={handleSubmit}
-                                disabled={savingDraft || submitting}
-                                className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            >
-                                {submitting ? 'Submitting…' : 'Submit'}
-                            </button>
+                            <div className="flex items-center gap-3">
+                                <button
+                                    type="button"
+                                    onClick={handleSaveDraft}
+                                    disabled={savingDraft || submitting}
+                                    className="rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    {savingDraft ? 'Saving…' : 'Save Draft'}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={handleSubmit}
+                                    disabled={savingDraft || submitting}
+                                    className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    {submitting ? 'Submitting…' : 'Submit'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}
 
-                {/* Back link for completed instances */}
+                {/* Back link + PDF export for completed instances */}
                 {!isDraft && (
-                    <div className="pt-2">
+                    <div className="pt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <Link
                             href="/checklists"
                             className="inline-flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
@@ -310,6 +358,59 @@ export default function Show({ checklist }) {
                             </svg>
                             Back to My Checklists
                         </Link>
+
+                        {/* PDF export */}
+                        <div className="flex flex-col items-start sm:items-end gap-1">
+                            <button
+                                type="button"
+                                onClick={handleExportPdf}
+                                disabled={pdfState === 'requesting'}
+                                className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                            >
+                                {pdfState === 'requesting' ? (
+                                    <>
+                                        {/* Spinner */}
+                                        <svg className="h-4 w-4 animate-spin text-gray-500" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                                        </svg>
+                                        Generating PDF…
+                                    </>
+                                ) : (
+                                    <>
+                                        {/* Download icon */}
+                                        <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" />
+                                            <path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" />
+                                        </svg>
+                                        Export PDF
+                                    </>
+                                )}
+                            </button>
+
+                            {/* Status feedback */}
+                            {pdfState === 'polling' && (
+                                <p className="text-xs text-gray-400">
+                                    Building your PDF — this usually takes a few seconds…
+                                </p>
+                            )}
+                            {pdfState === 'done' && (
+                                <p className="text-xs text-green-600 flex items-center gap-1">
+                                    <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+                                    </svg>
+                                    PDF downloaded successfully.
+                                </p>
+                            )}
+                            {pdfState === 'error' && (
+                                <p className="text-xs text-red-600 flex items-center gap-1">
+                                    <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+                                    </svg>
+                                    {pdfError}
+                                </p>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>

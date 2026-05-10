@@ -44,9 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/checklists/{checklist}/submit', [ChecklistController::class, 'submit']);
     });
 
-    // PDF export — available to both roles (policy enforces ownership)
-    Route::post('/checklists/{checklist}/export-pdf', [PdfExportController::class, 'export']);
-    Route::get('/checklists/{checklist}/download-pdf', [PdfExportController::class, 'download']);
+    // PDF export — moved to web routes (uses session auth)
 
     // Reports — admin only
     Route::middleware('role:admin')->group(function () {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PdfExportController;
 use App\Http\Controllers\Web\ChecklistWebController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\ReportWebController;
@@ -61,4 +62,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/checklists/{checklist}/save-draft', [ChecklistWebController::class, 'saveDraft'])->name('checklists.save-draft');
         Route::post('/checklists/{checklist}/submit', [ChecklistWebController::class, 'submit'])->name('checklists.submit');
     });
+
+    /*
+    |----------------------------------------------------------------------
+    | PDF export — available to both roles (policy enforces ownership)
+    |----------------------------------------------------------------------
+    */
+    Route::post('/checklists/{checklist}/export-pdf', [PdfExportController::class, 'export'])->name('checklists.export-pdf');
+    Route::get('/checklists/{checklist}/download-pdf', [PdfExportController::class, 'download'])->name('checklists.download-pdf');
 });
